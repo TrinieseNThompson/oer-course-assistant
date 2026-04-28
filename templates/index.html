@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OER Course Assistant</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            background-color: #FBF5EF; /* cream */
+            color: #6F1D1B; /* burgundy */
+            margin: 40px;
+        }
+
+        h2 {
+            color: #6F1D1B;
+        }
+
+        #chat {
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+
+        .user {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .bot {
+            margin-left: 20px;
+            white-space: pre-line;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 16px;
+            border: 2px solid #6F1D1B;
+            background-color: #FFFDF9;
+        }
+
+        button {
+            padding: 8px 12px;
+            font-size: 16px;
+            background-color: #6F1D1B;
+            color: #FBF5EF;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #8B2C2A;
+        }
+    </style>
+</head>
+<body>
+
+<h2>OER Course Assistant</h2>
+
+<div id="chat"></div>
+
+<input id="input" type="text" placeholder="Enter course (e.g., ENGL 1101)" 
+size="40">
+<button onclick="send()">Send</button>
+
+<script>
+function send() {
+    const msg = document.getElementById("input").value;
+    document.getElementById("chat").innerHTML += `<div class="user">You: 
+${msg}</div>`;
+
+    fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: msg})
+    })
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById("chat").innerHTML += `<div 
+class="bot">${data.reply}</div>`;
+    });
+
+    document.getElementById("input").value = "";
+}
+</script>
+
+</body>
+</html>
